@@ -1,11 +1,13 @@
 # agenda
+* contact book made with Vue and vanilla CSS
+* agenda feita com Vue e vanilla CSS
+## Project setup
 ```
 git clone https://github.com/isbeli/desafio-vue.git
 ```
 ```
 cd desafio-vue
 ```
-## Project setup
 ```
 npm install
 ```
