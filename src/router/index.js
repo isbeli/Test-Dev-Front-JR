@@ -1,23 +1,48 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Contacts from '../views/Contacts.vue'
+import Contact from '../views/Contact.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
+  /* Main route */
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home, 
+    beforeEnter: (to, from, next) => { 
+        $cookies.remove("user")
+        next();  
+    }
   },
+  /* Contacts route */
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+    path: '/contacts',
+    name: 'Contacts',
+    component: Contacts
+  },
+  /* Route for new contact */
+  {
+    path: '/Contacts/new',
+    name: 'new',
+    component: Contact, 
+    beforeEnter: (to, from, next) => { 
+      if (!$cookies.isKey("user")) next({ name: 'Home' })
+        next();  
+    }
+  },
+  /* Route for edit contact */
+  {
+    path: '/Contacts/edit',
+    name: 'edit',
+    component: Contact, 
+    beforeEnter: (to, from, next) => { 
+      if (!$cookies.isKey("user")) next({ name: 'Home' })
+        next();  
+    }
+  },
 ]
 
 const router = new VueRouter({
@@ -25,5 +50,6 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
 
 export default router

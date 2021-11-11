@@ -1,0 +1,41 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "admin@admin.com",
+      "password": "12345678"
+    }
+  ],
+  "contacts": [
+    {
+      "id": 1,
+      "name": "Isbeli Joselin  Ramirez  Machados",
+      "celular": "988173040",
+      "email": "isbeliramirez8@gmail.com"
+    },
+    {
+      "id": 2,
+      "name": "Sophia Abrahão",
+      "celular": "988173040",
+      "email": "Sophia Abrahão@gmail.com"
+    },
+    {
+      "id": 3,
+      "name": "Berenice Azambuja",
+      "celular": "988173037",
+      "email": "Bereniceazambuja@yahoo.coom"
+    },
+    {
+      "id": 4,
+      "name": "Ivete Sangalo",
+      "celular": "988173037",
+      "email": "Ivetesangalo@yahoo.coom"
+    },
+    {
+      "id": 5,
+      "name": "flor maria cedeno",
+      "celular": "988173040",
+      "email": "flormaria@gmail.com"
+    }
+  ]
+}
