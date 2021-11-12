@@ -1,15 +1,18 @@
 <template>
   <div>
+    <!-- Navbar -->
     <div id="nav">
       <Nav/>
-            <!-- <h4>{{this.$route.params.email}}</h4> -->
     </div>
-        
+    <!-- Container -->    
     <div class="tab-container">
+      <!-- Alert -->
+      <Alert :msg="msg" v-if="alert"/>
+      <!-- Title -->
       <div class="title-group">
           <span class="title">{{title}}</span>
           <div>
-            <button @click="newContact" class="btn-new">Adiciona novo contato</button>
+            <button @click="newContact" class="btn-new">Adicionar novo contato</button>
           </div>
       </div>
       <!-- Start table -->
@@ -17,13 +20,28 @@
         <!-- thead -->
         <thead>
             <tr id="table-head">
-              <th>#</th>
-              <th>Nome</th>
-              <th>Celular</th>
-              <th>Email</th>
+              <th id="id" class="sort" @click="sort('id')">
+                #
+                <svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 5L0 0H10L5 5Z" fill="#244677"/></svg>
+              </th>
+              <th id="name" class="sort" @click="sort('name')">
+                Nome
+                <svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 5L0 0H10L5 5Z" fill="#244677"/></svg>
+              </th>
+              <th id="celular" class="sort" @click="sort('celular')">
+                Celular
+                <svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 5L0 0H10L5 5Z" fill="#244677"/>
+                </svg>
+              </th>
+              <th id="email" class="sort" @click="sort('email')">
+                Email
+                <svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 5L0 0H10L5 5Z" fill="#244677"/>
+                </svg>
+              </th>
               <th>Ações</th>
             </tr>        
         </thead>
+        <!-- end thead -->
         <!-- line in table-->
         <tr>
           <th class="line"></th>
@@ -32,7 +50,7 @@
               <th class="line"></th>
               <th class="line"></th>
         </tr>
-        <!-- end thead -->
+        <!-- end line-->
         <!-- tbody -->
         <tbody>
           <tr v-for="contact of contacts" :key="contact.id">
@@ -70,6 +88,7 @@
 <script>
 import axios from 'axios'
 import Nav from '@/components/Nav.vue'
+import Alert from '@/components/Alert.vue'
 
       export default {
         name: 'MyContacts',
@@ -80,12 +99,15 @@ import Nav from '@/components/Nav.vue'
             id:"",
             name:"",
             celular:"",
-            email:""
+            email:"",
+            alert:false,
+            msg:{text:"",type:""}
           }
           
         },
         components:{
-          Nav
+          Nav,
+          Alert
         },
         methods:{
           newContact(){
@@ -93,7 +115,7 @@ import Nav from '@/components/Nav.vue'
             let contact={ id: "" , name: "" , email : "" , celular : ""}
 
             /* passing object by parameter to complement */
-            this.$router.push({ name : 'new', params : {contact:contact } })
+            this.$router.push({ name : 'new', params : { contact : contact } })
           },
           getContacts (){
             /* get contacts from api */
@@ -106,37 +128,52 @@ import Nav from '@/components/Nav.vue'
             /* obtains the contact by its id, and passes it as a parameter to the edit form */
              axios.get("http://localhost:3000/contacts/"+id)
              .then(response=>{
-               this.$router.push({ name: 'edit', params: { contact: response.data, user: this.$route.params.email} })
+               this.$router.push({ name: 'edit', params: { contact: response.data } })
              })
           },
           deleteContact(id){
-            /* delete contact by id */
-            axios.delete("http://localhost:3000/contacts/"+id)
+            /* confirm for delete */
+            if(confirm("Tem certeza que quer deletar este contato?")){
+               /* delete contact by id */
+              axios.delete("http://localhost:3000/contacts/"+id)
+              .then(response=>{
+                this.msg.text="Contato apagado";
+                this.msg.type="danger"
+                this.alert=true;
+                /*update contacts list in the view*/
+                this.getContacts()
+              }) 
+            }
+           
+          },
+          sort(parameter){
+            /* order column table */
+            axios.get("http://localhost:3000/contacts?_sort="+parameter+"&_order=asc")
              .then(response=>{
-               alert(`Contato apagado`);
-               /*update contacts list in the view*/
-               this.getContacts()
-             }) 
+               this.contacts= response.data
+             })
           }
         },
         beforeMount() {
           /* If the user's cookie not exists,it redirects to the login (Home) */
-          $cookies.isKey("user") ? console.log("exist") : this.$router.push({ name: 'Home'})
-          this.getContacts()
-        }        
+          !$cookies.isKey("user") ? this.$router.push({ name: 'Home'}): this.getContacts()
+        }     
 } 
 </script>
 
 <style>
+
 body{
   background-color: #F7F8FC;
 }
+
 .tab-container{
   margin: 150px 40px;
   background: #ffffff;
   border-radius: 5px;
   padding: 30px;
   box-shadow: 0px 10px 16px rgba(0, 0, 0, 0.04);
+  overflow-x: auto;
 
 }
 
@@ -153,6 +190,7 @@ table tbody{
   line-height: 148%;
   color: #495057;
 }
+
 table tr:nth-child(even) {
   background-color: #fff;
 }
@@ -178,7 +216,7 @@ tr:hover td{
   font-family: 'Poppins';
   font-style: normal;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 120%;
 }
 
@@ -213,6 +251,7 @@ tr:hover td{
 
 .btn-new:hover{
   opacity: 0.65;
+  cursor:pointer;
 }
 
 .td-actions{
@@ -233,8 +272,47 @@ tr:hover td{
   padding: 1px;
 }
 
+.sort{
+  cursor:pointer;
+}
+
 a:hover {
  cursor:pointer;
 }
 
+@media only screen and (max-width: 900px) {
+  #table-head{
+      text-align: center;
+      font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+  .tab-container{
+    margin: 150px 0px;
+    background: #ffffff;
+    border-radius: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .title-group{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .title {
+    margin-bottom: 10px;
+  }
+
+  table tbody{
+    font-size: 10px;
+  }
+  #table-head{
+    text-align: center;
+    font-size: 10px;
+  }
+}
 </style>

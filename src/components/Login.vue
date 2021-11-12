@@ -63,9 +63,6 @@
                 .then(response=>{
                     if (response.data.length > 0 ){
                         var answers=response.data[0];
-                        /* alert welcome to login */
-                         alert(`Bem-vindo ${answers.email}`);
-
                          /* Redirect to contacts view */
                         this.$router.push({ name: 'Contacts'})
                         /* Set cookie */
@@ -99,7 +96,7 @@
     }
 
     .login-img > img{
-        width: 100%;
+        width: 70%;
     }
     
     .login {
@@ -173,6 +170,7 @@
 
     .btn-login:hover{
         opacity: 0.95;
+        cursor:pointer;
     }
 
     .alert{
@@ -193,13 +191,27 @@
     .login{
         width: 100%;
         flex-direction: column;
+        padding: 0px;
     }
 
     .login-img{
         width: 100%;
         flex-direction: column;
+        align-items: center;
     }
-   
+
+    .form-login{
+        align-items: center;
+        padding: 20px;
+    }
+
+    .input-login{
+        width: 90%;
+    }
+    
+    .btn-login{
+        width: 100%;
+    }
 }
 
 </style>

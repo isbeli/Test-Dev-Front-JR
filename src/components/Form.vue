@@ -15,7 +15,7 @@
                 contato
             </p>
             <!-- Alert -->
-            <Alert v-if="alert"/>
+            <Alert v-if="alert" :msg="{text:'Operação realizada com sucesso',type:'success'}"/>
             <div>
                 <form v-on:submit.prevent="save(id,$route.name)" class="form-contato">
                     <div class="input-group">
@@ -23,7 +23,7 @@
                             <div>
                                 <label for="name" class="form-label">Nome Completo</label>
                             </div>
-                            <input type="text" placeholder="Digite o nome do contato" class="form-input" name="name" v-model="name" pattern="^[a-zA-Z ]{2,254}" required>
+                            <input type="text" placeholder="Digite o nome do contato" class="form-input" name="name" v-model="name" pattern="^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$" required>
                         </div>
                     </div>
                     <div class="input-group">
@@ -37,7 +37,10 @@
                             <div>
                                 <label for="celular" class="form-label">Celular</label>
                             </div>
-                            <input type="number" placeholder="Digite o Celular" class="form-input" name="celular" v-model="celular" required>
+                            <input @mouseover="display" @mouseout="notDisplay" type="text" placeholder="Digite o Celular " class="form-input" name="celular" v-model="celular" pattern='\s{0,1}[(]\d{2,2}[)]\s{0,1}\d{4,5}\s{0,1}[\-]{0,1}\s{0,1}\d{4,4}\s{0,1}' required>
+                            <div>
+                                <label v-bind:class="this.class">Exemplos :(99) 99999-9999  , (99) 9999-9999</label>
+                            </div>
                         </div>
                     </div>
                     <button type="submit">
@@ -72,7 +75,8 @@ export default {
             name : this.contact.name,
             celular : this.contact.celular,
             email : this.contact.email,
-            alert: false
+            alert: false,
+            class: "notDisplay"
         }
     },components:{
           Nav,
@@ -92,7 +96,6 @@ export default {
             if(method==="edit"){
                 axios.put("http://localhost:3000/contacts/"+id,json)
                 .then(response=>{
-                    console.log(response.data)
                    this.alert=true
                 })
             }
@@ -100,12 +103,17 @@ export default {
             if(method==="new"){
                  axios.post("http://localhost:3000/contacts/",json)
                 .then(response=>{
-                    console.log(response.data)
                     this.alert=true
                 })
             }
             
-        }, 
+        },
+        display(){
+            this.class="display"
+        },
+        notDisplay(){
+            this.class="notDisplay"
+        }  
     }
 
 }
@@ -162,6 +170,7 @@ export default {
     background: #F1F3F5;
     font-family:'Montserrat';
     border-style: none;
+    letter-spacing: .5px;
 }
 
 .form-label{
@@ -189,6 +198,7 @@ export default {
 
 .form-contato > button:hover{
     opacity: 0.9;
+    cursor:pointer;
 }
 
 .input-group{
@@ -203,6 +213,16 @@ export default {
     display: flex;
     flex-direction: column;
     width: 100%;
+}
+
+.display{
+    display: "";
+    color: #495057;
+    opacity: .70;
+}
+
+.notDisplay{
+    display: none;
 }
 
 @media only screen and (max-width: 600px) {

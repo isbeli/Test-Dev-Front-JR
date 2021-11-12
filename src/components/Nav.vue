@@ -26,7 +26,6 @@ export default {
     },
     methods:{
         back(){
-            console.log("back")
             /* if the current path is for editing or creating, return to the contact table view, otherwise return to the login */
             /* se o route atual for para edição ou criação, volte para a visão da tabela de contatos, caso contrário, volte para o login */
             this.$route.name.includes('new') || this.$route.name.includes('edit') ? this.$router.push({ name: 'Contacts'}) : ( this.$router.push({ name: 'Home'}) ) 

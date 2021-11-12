@@ -25,7 +25,7 @@ const routes = [
   },
   /* Route for new contact */
   {
-    path: '/Contacts/new',
+    path: '/contacts/new',
     name: 'new',
     component: Contact, 
     beforeEnter: (to, from, next) => { 
@@ -35,7 +35,7 @@ const routes = [
   },
   /* Route for edit contact */
   {
-    path: '/Contacts/edit',
+    path: '/contacts/edit',
     name: 'edit',
     component: Contact, 
     beforeEnter: (to, from, next) => { 
